@@ -20,4 +20,4 @@ We can expand on this in time. This is just jotting stuff down for now.
 
 ## How to set up
 
-So far, the only thing you really need is python3 and doing `pip install -r requirements.txt` That should install all necessary modules in your environment.
+So far, the only thing you really need is python3. From this directory run `pip install -r app/requirements.txt` That should install all necessary modules in your environment.
