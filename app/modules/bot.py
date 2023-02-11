@@ -1,24 +1,29 @@
 import discord, os 
 from discord import WelcomeScreen, WelcomeChannel
 from discord.ext import commands
+import sqlalchemy
+from sqlalchemy.orm import Session
 
 # ENV Vars
-welcomeChannelId = os.environ['DISCORD_WELCOME_CHANNEL_ID']
-rulesChannelId = os.environ['DISCORD_RULES_CHANNEL_ID']
-announcementChannelId = os.environ['DISCORD_RULES_CHANNEL_ID']
 guildId = os.environ['DISCORD_GUILD_ID','DISCORD_SERVER_ID']
 botToken = os.environ['DISCORD_TEST_BOT_TOKEN','DISCORD_BOT_TOKEN']
-# Client configuration
+
+# Instantiating discord class objects
 intents = discord.Intents.all()
-
 bot = discord.Client(intents=intents)
-
-# TODO: Create a Welcome Screen
-# Create Welcome Screen
-announcementChannel = bot.get_channel(announcementChannelId)
-rulesChannel = bot.get_channel(rulesChannelId)
-welcomeChannel = bot.get_channel(welcomeChannelId)
 welcomeScreen = WelcomeScreen()
 
+#TODO: Create Class
+
+async def editWelcomeScreen(description: str,channelId: int, channelMessage: str, emoji=None):
+  '''Edits as single Welcome Channel at a time asyncronously'''
+  await welcomeScreen.edit(
+    description=description,
+    welcome_channels=[
+      WelcomeChannel(channel=channelId, description=channelMessage, emoji=emoji)
+    ]
+  )
+
 # Run the bot
-bot.run(token=botToken)
+if __name__=="__main__":
+  bot.run(token=botToken)
