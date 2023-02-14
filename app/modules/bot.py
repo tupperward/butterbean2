@@ -1,6 +1,7 @@
 import discord, os 
 from discord import WelcomeScreen, WelcomeChannel
 from discord.ext import commands
+from modules.db import upsertChannelMessage, upsertServerDescription
 
 # ENV Vars
 guildId = os.environ['DISCORD_GUILD_ID','DISCORD_SERVER_ID']
@@ -11,15 +12,15 @@ intents = discord.Intents.all()
 bot = commands.Bot(intents=intents, command_prefix='/')
 welcomeScreen = WelcomeScreen()
 
-@bot.hybrid_command(brief='Edit Welcome Screen', description='Edit the welcome screen and welcome channel messages.')
-async def editWelcomeScreen(description: str,channelId: int, channelMessage: str, emoji=None):
-  '''Edits as single Welcome Channel at a time asyncronously'''
+@bot.hybrid_command(brief='Edit Welcome Channel', description='Edit a welcome channel message and emoji.')
+async def editWelcomeChannel(channelId: int, channelMessage: str, emoji=None):
+  '''Edits a single Welcome Channel'''
   await welcomeScreen.edit(
-    description=description,
     welcome_channels=[
       WelcomeChannel(channel=channelId, description=channelMessage, emoji=emoji)
     ]
   )
+  await upsertChannelMessage(channelId=channelId, channelMessage=channelMessage, emoji=emoji)
 
 # Run the bot
 if __name__=="__main__":

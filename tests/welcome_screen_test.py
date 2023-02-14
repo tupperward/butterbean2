@@ -2,7 +2,7 @@ import unittest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.modules.db import WelcomeMessages, Base
-from app.modules.db import getAllChannels, getWelcomeDataByChannelId, upsertWelcomeMessage, getServerDescription, upsertServerDescription
+from app.modules.db import getAllChannels, getWelcomeDataByChannelId, upsertChannelMessage, getServerDescription, upsertServerDescription
 
 # create an engine and a sessionmaker for a test database
 engine = create_engine('sqlite:///db/test_database.db')
@@ -15,13 +15,13 @@ class TestORMFunctions(unittest.TestCase):
     def tearDown(self):
         Base.metadata.drop_all(bind=engine)
 
-    async def test_upsert_welcome_message(self):
+    async def test_upsertChannelMessage(self):
         channelId = 1234
         channelMessage = 'Test channel message'
         emoji = 'Test emoji'
 
         # insert a new row
-        message = await upsertWelcomeMessage(channelId, channelMessage, emoji)
+        message = await upsertChannelMessage(channelId, channelMessage, emoji)
         self.assertEqual(message.channelId, channelId)
         self.assertEqual(message.channelMessage, channelMessage)
         self.assertEqual(message.emoji, emoji)
@@ -29,7 +29,7 @@ class TestORMFunctions(unittest.TestCase):
         # update the existing row
         channelMessage = 'Updated channel message'
         emoji = 'Updated emoji'
-        message = upsertWelcomeMessage(channelId, channelMessage, emoji)
+        message = upsertChannelMessage(channelId, channelMessage, emoji)
         self.assertEqual(message.channelId, channelId)
         self.assertEqual(message.channelMessage, channelMessage)
         self.assertEqual(message.emoji, emoji)

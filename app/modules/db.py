@@ -39,19 +39,18 @@ async def upsertServerDescription(serverDescription: str):
         await session.refresh(message)
     return message
 
-async def upsertWelcomeMessage(channelId, serverDescription=None, channelMessage=None, emoji=None):
+async def upsertChannelMessage(channelId, channelMessage=None, emoji=None):
 
     async with Session(engine) as session:
         message = await session.execute(select(WelcomeMessages).filter_by(channelId=channelId))
 
         if message:
             # update the existing row
-            message.serverDescription = serverDescription
             message.channelMessage = channelMessage
             message.emoji = emoji
         else:
             # insert a new row
-            message = WelcomeMessages(channelId=channelId, serverDescription=serverDescription, channelMessage=channelMessage, emoji=emoji)
+            message = WelcomeMessages(channelId=channelId, channelMessage=channelMessage, emoji=emoji)
             session.add(message)
 
         await session.commit()
