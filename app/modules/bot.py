@@ -1,8 +1,6 @@
 import discord, os 
 from discord import WelcomeScreen, WelcomeChannel
 from discord.ext import commands
-import sqlalchemy
-from sqlalchemy.orm import Session
 
 # ENV Vars
 guildId = os.environ['DISCORD_GUILD_ID','DISCORD_SERVER_ID']
