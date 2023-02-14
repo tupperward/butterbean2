@@ -8,11 +8,10 @@ botToken = os.environ['DISCORD_TEST_BOT_TOKEN','DISCORD_BOT_TOKEN']
 
 # Instantiating discord class objects
 intents = discord.Intents.all()
-bot = discord.Client(intents=intents)
+bot = commands.Bot(intents=intents, command_prefix='/')
 welcomeScreen = WelcomeScreen()
 
-#TODO: Create Class
-
+@bot.hybrid_command(brief='Edit Welcome Screen', description='Edit the welcome screen and welcome channel messages.')
 async def editWelcomeScreen(description: str,channelId: int, channelMessage: str, emoji=None):
   '''Edits as single Welcome Channel at a time asyncronously'''
   await welcomeScreen.edit(
@@ -24,4 +23,6 @@ async def editWelcomeScreen(description: str,channelId: int, channelMessage: str
 
 # Run the bot
 if __name__=="__main__":
-  bot.run(token=botToken)
+  # I think I don't want to actually run this here. I should probably have
+  #bot.run(token=botToken)
+  print("Hello, World")

@@ -4,6 +4,9 @@ from sqlalchemy.orm import declarative_base, Session, selectinload
 Base = declarative_base()
 engine = create_engine("sqlite+pysqlite:///memory")
 
+
+### Welcome Screen Management ###
+
 class WelcomeMessages(Base):
     __tablename__ = "welcome_messages"
     
@@ -18,7 +21,26 @@ async def getWelcomeDataByChannelId(channelId):
         channelData = await session.query(WelcomeMessages).filter_by(channelId=channelId).first()
     return channelData
 
+async def getAllChannels():
+    async with Session(engine) as session:
+        query = await session.query(WelcomeMessages).filter_by(channelId=True).all()
+    return query
+
+async def getServerDescription():
+    async with Session(engine) as session:
+        message = await session.query(WelcomeMessages).filter_by(serverDescription=True).first()
+    return message
+
+async def upsertServerDescription(serverDescription: str):
+    async with Session(engine) as session:
+        message = WelcomeMessages(serverDescription=serverDescription)
+        await session.add(message)
+        await session.commit()
+        await session.refresh(message)
+    return message
+
 async def upsertWelcomeMessage(channelId, serverDescription=None, channelMessage=None, emoji=None):
+
     async with Session(engine) as session:
         message = await session.execute(select(WelcomeMessages).filter_by(channelId=channelId))
 
@@ -36,3 +58,5 @@ async def upsertWelcomeMessage(channelId, serverDescription=None, channelMessage
         await session.refresh(message)
 
         return message
+
+### End Welcome Screen Management
